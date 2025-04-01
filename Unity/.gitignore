@@ -1,0 +1,45 @@
+# =============== #
+# Unity generated #
+# =============== #
+[Ll]ibrary/
+[Ll]ogs/
+[Tt]emp/
+[Gg]enerated/
+Assets/VoxelandData/
+# ===================================== #
+# Visual Studio / MonoDevelop generated #
+# ===================================== #
+*.svd
+*.userprefs
+*.csproj
+*.pidb
+*.suo
+*.sln
+*.user
+*.unityproj
+*.booproj
+.vs/
+.vs/*
+# ============ #
+# OS generated #
+# ============ #
+.DS_Store
+.DS_Store?
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Assets/AssetBundleGrahTool/UnityEngine.AssetGraph/Cache*
+Assets/AssetBundleGrahTool/UnityEngine.AssetGraph/TemporalSettingFiles*
+Assets/AssetBundleGrahTool/UnityEngine.AssetGraph/Generated*
+Assets/AssetBundleGrahTool/Doxyfile.meta
+Assets/michal_test/*
+Assets/michal_test/
+Assets/Ultimate Survival/Scenes
+docs/*
+Assets/AssetBundleGrahTool/.meta
+docs/html/*
+Assets/AssetBundleGrahTool/.meta
+docs/html/*/*.meta
+obj/Debug/*
+*.vsconfig
