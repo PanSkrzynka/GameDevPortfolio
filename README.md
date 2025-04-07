@@ -41,9 +41,9 @@ In this section, you will find a selection of sample projects that demonstrate m
 ### Unity Samples
 
 #### **Gravity**
-- **Description:** Brief explanation of the project, its scope, and its unique features.
+- **Description:** Custom-built gravity simulation based on the Barnes-Hut algorithm. Inspired by chaos systems, and three body problem.
 - **Tools & Technologies Used:** Unity 6.
-- **[View More](Link_to_more_details_or_repository)**
+- **[View More](https://github.com/PanSkrzynka/GameDevPortfolio/tree/master/Unity/Gravity)**
 
 
 
@@ -53,6 +53,5 @@ Feel free to reach out if you have questions or if you are interested in collabo
 
 - **Email:** your.email@example.com
 - **LinkedIn:** [Your LinkedIn](your-linkedin-url)
-- **GitHub:** [Your GitHub](your-github-url)
 
 Thank you for visiting my portfolio!
