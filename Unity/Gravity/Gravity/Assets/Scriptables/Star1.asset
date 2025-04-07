@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4843e3c02c348e43ada87959894af2b, type: 3}
+  m_Name: Star1
+  m_EditorClassIdentifier: 
+  centralBodyPrefab: {fileID: 3045622913248173529, guid: 3639656eb8d63854b9a25952d1a60732, type: 3}
+  centralMass: 14.835215
+  orbitingObjects:
+  - systemConfig: {fileID: 11400000, guid: 6ca13d408d64adc4e99bc5c02f0d29a6, type: 2}
+    distance: 10
+    initialAngle: 0
+    orbitalPlaneAngle: 0
+    bodyMass: 0
+  - systemConfig: {fileID: 11400000, guid: 6ca13d408d64adc4e99bc5c02f0d29a6, type: 2}
+    distance: 20
+    initialAngle: 0
+    orbitalPlaneAngle: 0
+    bodyMass: 0
+  - systemConfig: {fileID: 11400000, guid: 6ca13d408d64adc4e99bc5c02f0d29a6, type: 2}
+    distance: 25
+    initialAngle: 0
+    orbitalPlaneAngle: 0
+    bodyMass: 0
