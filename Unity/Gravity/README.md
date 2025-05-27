@@ -5,7 +5,7 @@ This is a custom-built gravity simulation based on the Barnes-Hut algorithm, imp
 
 ##  Showcase
 
-| ![1](gifs/gravity1.gif) | ![2](gifs/gravity2.gif) | ![3](gifs/gravity3.gif) |
+![1](gifs/gravity1.gif)  ![2](gifs/gravity2.gif)  ![3](gifs/gravity3.gif) 
 
 ## Project Goals
 
