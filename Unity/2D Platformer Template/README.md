@@ -1,39 +1,39 @@
-# 🎮 2D Platformer Template
+#  2D Platformer Template
 
 A modular Unity 2D platformer showcasing core gameplay systems and clean architecture. Ideal for learning, prototyping, or extending into a complete game.
 
 ---
 
-## ✨ Features
+##  Features
 
-### 🕹️ Player Controller
+###  Player Controller
 - Responsive horizontal movement
 - Jump buffering (coyote time)
 - Smooth camera follow
 
-### ⏪ Rewind System
+###  Rewind System
 - Rewind of player and world state
 - Works on: player, enemies, keys, doors, health
 - Event-driven system with `IRewindable` interface
 
-### 🗝️ Keys & Doors
+###  Keys & Doors
 - Collect unique keys (`KeyID`-based)
 - Doors auto-unlock when player has required keys
 - Event-driven unlocking
 
-### ❤️ Health & UI
+###  Health & UI
 - Heart-based health display
 - Game Over screen when health reaches 0
 - Damage on enemy contact
 
-### 💾 Save System
+###  Save System
 - Binary save/load (keys + timer)
 - No PlayerPrefs
 - Easily extendable
 
 ---
 
-## 🧠 What It Demonstrates
+##  What It Demonstrates
 
 This project showcases **base Unity knowledge**, including:
 - Physics-based movement
