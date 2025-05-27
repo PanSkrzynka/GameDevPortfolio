@@ -2,6 +2,11 @@
 
 This is a custom-built gravity simulation based on the Barnes-Hut algorithm, implemented in full 3D using Unity 6.0. The project focuses on performance, scalability, and visual clarity, simulating gravitational interactions between large numbers of bodies while maintaining interactive frame rates.
 
+
+##  Showcase
+
+| ![1](gifs/gravity1.gif) | ![2](gifs/gravity2.gif) | ![3](gifs/gravity3.gif) |
+
 ## Project Goals
 
 - Build an n-body gravity simulation that remains performant with hundreds of dynamic objects.
