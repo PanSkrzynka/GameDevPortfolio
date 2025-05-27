@@ -48,7 +48,7 @@ In this section, you will find a selection of sample projects that demonstrate m
 #### **2D Platfromer Template**
 - **Description:** A Unity-based 2D platformer showcasing foundational gameplay systems and clean C# architecture.
 - **Tools & Technologies Used:** Unity 6.
-- **[View More](https://github.com/PanSkrzynka/GameDevPortfolio/tree/master/Unity/2D_Platformer_Template)**
+- **[View More](https://github.com/PanSkrzynka/GameDevPortfolio/tree/master/Unity/2D%20Platformer%20Template)**
 
 
 
