@@ -7,7 +7,7 @@ A Tactical RPG Prototype Built with Unreal Engine 5
 
 ##  Gameplay Showcase
 
-| ![Player Turn](gifs/parable1.gif) | ![Combat](gifs/parable2.gif) | ![Enemy AI](gifs/parable3.gif) |
+ ![Player Turn](gifs/parable1.gif)  ![Combat](gifs/parable2.gif)  ![Enemy AI](gifs/parable3.gif) 
 
 ---
 
