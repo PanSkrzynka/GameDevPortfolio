@@ -27,7 +27,7 @@ Additionally i worked with optimization on:
  - **[Castle Flipper](https://store.steampowered.com/app/944250/)**
 
 I'm working on a personal project 
-- **[Tactical Strategy Inspired by Fire Emblem Series]([https://store.steampowered.com/app/864700/](https://github.com/PanSkrzynka/GameDevPortfolio/tree/master/ParableofReEvolution)**
+- **[Tactical Strategy Inspired by Fire Emblem Series](https://github.com/PanSkrzynka/GameDevPortfolio/tree/master/ParableofReEvolution)**
 
 
 ## Sample Projects
