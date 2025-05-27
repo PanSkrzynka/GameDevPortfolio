@@ -22,11 +22,12 @@ Here are some of the games I have developed or contributed to that are currently
   - Worked on game optimization
 
 
-Additionally i worked with optimization on:
+I worked on optimization of:
  - **[Dinosaur Forsil Hunter](https://store.steampowered.com/app/864700/)**
  - **[Castle Flipper](https://store.steampowered.com/app/944250/)**
 
-I'm working on a personal project 
+
+I'm also working on a personal project: 
 - **[Tactical Strategy Inspired by Fire Emblem Series](https://github.com/PanSkrzynka/GameDevPortfolio/tree/master/Unreal/ParableofReEvolution)**
 
 
