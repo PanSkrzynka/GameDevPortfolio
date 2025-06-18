@@ -1,8 +1,12 @@
 #  2D Platformer Template
 
-A modular Unity 2D platformer showcasing core gameplay systems and clean architecture. Ideal for learning, prototyping, or extending into a complete game.
+A modular Unity 2D platformer showcasing core gameplay systems and clean architecture. Ideal for learning, prototyping, or extending into a complete game. All visuals are base shapes, to avoid usage of external assets.
 
 ---
+
+##  Showcase
+
+![1](gifs/platformerbackintime.gif)  ![2](gifs/platformerdoublegatesbackintime.gif)  ![3](gifs/platformergates.gif) 
 
 ##  Features
 
@@ -41,9 +45,4 @@ This project showcases **base Unity knowledge**, including:
 - Event-driven game logic
 - Rewindable state management
 - Modular architecture and serialization
-
-
-## License
-
-This project is open-source under the MIT License.
 
