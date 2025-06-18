@@ -34,15 +34,6 @@ I'm also working on a personal project:
 ## Sample Projects
 In this section, you will find a selection of sample projects that demonstrate my programming skills.
 
-### Unreal Engine Samples
-
-#### **Project Name 1**
-- **Description:** Short description of what this project is about and what it demonstrates (e.g., AI behaviors, physics simulations).
-- **Tools & Technologies Used:** Unreal Engine 4.xx, C++, Visual Studio.
-- **[View More](Link_to_more_details_or_repository)**
-
-
-
 ### Unity Samples
 
 #### **Gravity**
@@ -55,13 +46,17 @@ In this section, you will find a selection of sample projects that demonstrate m
 - **Tools & Technologies Used:** Unity 6.
 - **[View More](https://github.com/PanSkrzynka/GameDevPortfolio/tree/master/Unity/2D%20Platformer%20Template)**
 
+### Unreal Engine Samples - WIP Comming Soon
 
+#### **AI ARENA**
+- **Description:** Teambased game played by AI with multiple roles in a team, showcasing Unreal AI features.
+- **Tools & Technologies Used:** Unreal Engine 5.6, C++.
+- **Code sample will be available in late July**
 
 ## Contact Me
 
 Feel free to reach out if you have questions or if you are interested in collaborating on a project.
 
 - **Email:** michal.nowak.dev@gmail.com
-- **LinkedIn:** [Your LinkedIn](your-linkedin-url)
 
 Thank you for visiting my portfolio!
