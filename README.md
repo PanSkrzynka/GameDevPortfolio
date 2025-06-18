@@ -3,7 +3,7 @@ Welcome to my portfolio! Here, you can find a collection of my game development 
 
 ## Featured Projects
 
-Here are some of the games I have developed or contributed to that are currently available on Steam:
+Here are some of the games I have developed or contributed to that are (or soon will be available) on Steam:
 
 - **[Occupy Mars: The Game](https://store.steampowered.com/app/758690/)**
   - Served as Assistant Project Leader.
