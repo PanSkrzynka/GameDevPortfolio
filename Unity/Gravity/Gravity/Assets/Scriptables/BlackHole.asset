@@ -16,17 +16,157 @@ MonoBehaviour:
   centralMass: 1000
   orbitingObjects:
   - systemConfig: {fileID: 11400000, guid: 201bf1907fd029049bf3703fff2f0d41, type: 2}
-    distance: 300
+    distance: 500
     initialAngle: 0
     orbitalPlaneAngle: 0
     bodyMass: 0
   - systemConfig: {fileID: 11400000, guid: 201bf1907fd029049bf3703fff2f0d41, type: 2}
-    distance: 200
+    distance: 500
     initialAngle: 0
     orbitalPlaneAngle: 0
     bodyMass: 0
   - systemConfig: {fileID: 11400000, guid: 201bf1907fd029049bf3703fff2f0d41, type: 2}
-    distance: 400
+    distance: 500
+    initialAngle: 0
+    orbitalPlaneAngle: 0
+    bodyMass: 0
+  - systemConfig: {fileID: 11400000, guid: 201bf1907fd029049bf3703fff2f0d41, type: 2}
+    distance: 500
+    initialAngle: 0
+    orbitalPlaneAngle: 0
+    bodyMass: 0
+  - systemConfig: {fileID: 11400000, guid: 201bf1907fd029049bf3703fff2f0d41, type: 2}
+    distance: 500
+    initialAngle: 0
+    orbitalPlaneAngle: 0
+    bodyMass: 0
+  - systemConfig: {fileID: 11400000, guid: 201bf1907fd029049bf3703fff2f0d41, type: 2}
+    distance: 500
+    initialAngle: 0
+    orbitalPlaneAngle: 0
+    bodyMass: 0
+  - systemConfig: {fileID: 11400000, guid: 201bf1907fd029049bf3703fff2f0d41, type: 2}
+    distance: 500
+    initialAngle: 0
+    orbitalPlaneAngle: 0
+    bodyMass: 0
+  - systemConfig: {fileID: 11400000, guid: 201bf1907fd029049bf3703fff2f0d41, type: 2}
+    distance: 500
+    initialAngle: 0
+    orbitalPlaneAngle: 0
+    bodyMass: 0
+  - systemConfig: {fileID: 11400000, guid: 201bf1907fd029049bf3703fff2f0d41, type: 2}
+    distance: 500
+    initialAngle: 0
+    orbitalPlaneAngle: 0
+    bodyMass: 0
+  - systemConfig: {fileID: 11400000, guid: 201bf1907fd029049bf3703fff2f0d41, type: 2}
+    distance: 500
+    initialAngle: 0
+    orbitalPlaneAngle: 0
+    bodyMass: 0
+  - systemConfig: {fileID: 11400000, guid: 201bf1907fd029049bf3703fff2f0d41, type: 2}
+    distance: 500
+    initialAngle: 0
+    orbitalPlaneAngle: 0
+    bodyMass: 0
+  - systemConfig: {fileID: 11400000, guid: 201bf1907fd029049bf3703fff2f0d41, type: 2}
+    distance: 500
+    initialAngle: 0
+    orbitalPlaneAngle: 0
+    bodyMass: 0
+  - systemConfig: {fileID: 11400000, guid: 201bf1907fd029049bf3703fff2f0d41, type: 2}
+    distance: 500
+    initialAngle: 0
+    orbitalPlaneAngle: 0
+    bodyMass: 0
+  - systemConfig: {fileID: 11400000, guid: 201bf1907fd029049bf3703fff2f0d41, type: 2}
+    distance: 500
+    initialAngle: 0
+    orbitalPlaneAngle: 0
+    bodyMass: 0
+  - systemConfig: {fileID: 11400000, guid: 201bf1907fd029049bf3703fff2f0d41, type: 2}
+    distance: 500
+    initialAngle: 0
+    orbitalPlaneAngle: 0
+    bodyMass: 0
+  - systemConfig: {fileID: 11400000, guid: 201bf1907fd029049bf3703fff2f0d41, type: 2}
+    distance: 500
+    initialAngle: 0
+    orbitalPlaneAngle: 0
+    bodyMass: 0
+  - systemConfig: {fileID: 11400000, guid: 201bf1907fd029049bf3703fff2f0d41, type: 2}
+    distance: 500
+    initialAngle: 0
+    orbitalPlaneAngle: 0
+    bodyMass: 0
+  - systemConfig: {fileID: 11400000, guid: 201bf1907fd029049bf3703fff2f0d41, type: 2}
+    distance: 500
+    initialAngle: 0
+    orbitalPlaneAngle: 0
+    bodyMass: 0
+  - systemConfig: {fileID: 11400000, guid: 201bf1907fd029049bf3703fff2f0d41, type: 2}
+    distance: 500
+    initialAngle: 0
+    orbitalPlaneAngle: 0
+    bodyMass: 0
+  - systemConfig: {fileID: 11400000, guid: 201bf1907fd029049bf3703fff2f0d41, type: 2}
+    distance: 500
+    initialAngle: 0
+    orbitalPlaneAngle: 0
+    bodyMass: 0
+  - systemConfig: {fileID: 11400000, guid: 201bf1907fd029049bf3703fff2f0d41, type: 2}
+    distance: 500
+    initialAngle: 0
+    orbitalPlaneAngle: 0
+    bodyMass: 0
+  - systemConfig: {fileID: 11400000, guid: 201bf1907fd029049bf3703fff2f0d41, type: 2}
+    distance: 500
+    initialAngle: 0
+    orbitalPlaneAngle: 0
+    bodyMass: 0
+  - systemConfig: {fileID: 11400000, guid: 201bf1907fd029049bf3703fff2f0d41, type: 2}
+    distance: 500
+    initialAngle: 0
+    orbitalPlaneAngle: 0
+    bodyMass: 0
+  - systemConfig: {fileID: 11400000, guid: 201bf1907fd029049bf3703fff2f0d41, type: 2}
+    distance: 500
+    initialAngle: 0
+    orbitalPlaneAngle: 0
+    bodyMass: 0
+  - systemConfig: {fileID: 11400000, guid: 201bf1907fd029049bf3703fff2f0d41, type: 2}
+    distance: 500
+    initialAngle: 0
+    orbitalPlaneAngle: 0
+    bodyMass: 0
+  - systemConfig: {fileID: 11400000, guid: 201bf1907fd029049bf3703fff2f0d41, type: 2}
+    distance: 500
+    initialAngle: 0
+    orbitalPlaneAngle: 0
+    bodyMass: 0
+  - systemConfig: {fileID: 11400000, guid: 201bf1907fd029049bf3703fff2f0d41, type: 2}
+    distance: 500
+    initialAngle: 0
+    orbitalPlaneAngle: 0
+    bodyMass: 0
+  - systemConfig: {fileID: 11400000, guid: 201bf1907fd029049bf3703fff2f0d41, type: 2}
+    distance: 500
+    initialAngle: 0
+    orbitalPlaneAngle: 0
+    bodyMass: 0
+  - systemConfig: {fileID: 11400000, guid: 201bf1907fd029049bf3703fff2f0d41, type: 2}
+    distance: 500
+    initialAngle: 0
+    orbitalPlaneAngle: 0
+    bodyMass: 0
+  - systemConfig: {fileID: 11400000, guid: 201bf1907fd029049bf3703fff2f0d41, type: 2}
+    distance: 500
+    initialAngle: 0
+    orbitalPlaneAngle: 0
+    bodyMass: 0
+  - systemConfig: {fileID: 11400000, guid: 201bf1907fd029049bf3703fff2f0d41, type: 2}
+    distance: 500
     initialAngle: 0
     orbitalPlaneAngle: 0
     bodyMass: 0
