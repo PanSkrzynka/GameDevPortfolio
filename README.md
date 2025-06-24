@@ -1,5 +1,6 @@
 # GameDevPortfolio
-Welcome to my portfolio! Here, you can find a collection of my game development projects. Below are links to projects I've worked on, followed by some smaller sample projects that showcase my skills.
+Here, you can find a collection of my game development projects. Below are links to projects I've worked on, followed by some smaller sample projects that showcase my skills.
+I'm experienced in code optimization, refactoring legacy systems, and working with diverse codebases written by different developers. I enjoy diving into complex technical challenges and ensuring both performance and maintainability.
 
 ## Featured Projects
 
@@ -30,6 +31,11 @@ I worked on optimization of:
 I'm also working on a personal project: 
 - **[Tactical Strategy Inspired by Fire Emblem Series](https://github.com/PanSkrzynka/GameDevPortfolio/tree/master/Unreal/ParableofReEvolution)**
 
+Additionally, I worked on the OpenCoop GameINN project. Although the project was carried out by a team of advanced developers, I served as the main programming coordinator.
+**[Gov project link](https://www.gov.pl/web/ncbr-en/development-of-an-innovative-opencoop-system-for-creating-and-adding-an-online-cooperative-mode-to-single-player-simulator-games)**
+ - Designed the flow of adding Coop functionality into an existing Unity projects.
+ - Implemented an auto-editing code system that identifies areas for change and highlights those requiring manual editing.
+ - Created a machine learning model to assess the feasibility of converting games into co-op mode.
 
 ## Sample Projects
 In this section, you will find a selection of sample projects that demonstrate my programming skills.
