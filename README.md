@@ -37,6 +37,31 @@ Additionally, I worked on the OpenCoop GameINN project. Although the project was
  - Implemented an auto-editing code system that identifies areas for change and highlights those requiring manual editing.
  - Created a machine learning model to assess the feasibility of converting games into co-op mode.
 
+## Tech Stack
+
+### Unity (C#)
+**AI & Systems:** ML-Agents, DOTS, Zenject  
+**Procedural Gen:** MapMagic  
+**Editor Tools:** Odin Inspector, ScriptableObject Architecture  
+**Networking:** Mirror, Photon PUN 2, Netcode for GameObjects  
+**Persistence:** Easy Save  
+**Input:** Rewired  
+**Audio:** FMOD  
+**Rendering:** Experience with Built-in, URP, and HDRP  
+**Testing & Debugging:** Test Framework, Profiler, Frame Debugger, Memory Profiler  
+
+### Unreal Engine (C++ / Blueprints)
+**Rendering:** Lumen, Nanite  
+**AI & Gameplay:** GAS, Gameplay Tags, Blackboards, EQS, MaSS  
+**World Systems:** World Partition, Foliage  
+**Architecture:** Game/Engine/Editor Subsystems  
+**Audio:** FMOD  
+**Profiling:** Unreal Insights, Stat Commands, GPU Visualizer, Shader Complexity, Memory Insights, Network Profiler
+
+### Cross-Engine Tools
+**GPU Debugging:** RenderDoc, NVIDIA Nsight Graphics  
+**Performance Profiling:** Intel GPA
+
 ## Sample Projects
 In this section, you will find a selection of sample projects that demonstrate my programming skills.
 
