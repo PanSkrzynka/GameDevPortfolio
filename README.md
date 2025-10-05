@@ -45,9 +45,9 @@ Additionally, I worked on the OpenCoop GameINN project. Although the project was
 **Editor Tools:** Odin Inspector, ScriptableObject Architecture  
 **Networking:** Mirror, Photon PUN 2, Netcode for GameObjects  
 **Persistence:** Easy Save  
-**Input:** Rewired  
+**Input:** Rewired, Input System, Input Manager  
 **Audio:** FMOD  
-**Rendering:** Experience with Built-in, URP, and HDRP  
+**Rendering:** Experience with Built-in, URP, and HDRP, 3D and 2D   
 **Testing & Debugging:** Test Framework, Profiler, Frame Debugger, Memory Profiler  
 
 ### Unreal Engine (C++ / Blueprints)
@@ -61,6 +61,9 @@ Additionally, I worked on the OpenCoop GameINN project. Although the project was
 ### Cross-Engine Tools
 **GPU Debugging:** RenderDoc, NVIDIA Nsight Graphics  
 **Performance Profiling:** Intel GPA
+*Platforms:** Expiriance working on Mobile, SteamDeck, and PC
+
+
 
 ## Sample Projects
 In this section, you will find a selection of sample projects that demonstrate my programming skills.
@@ -77,17 +80,11 @@ In this section, you will find a selection of sample projects that demonstrate m
 - **Tools & Technologies Used:** Unity 6.
 - **[View More](https://github.com/PanSkrzynka/GameDevPortfolio/tree/master/Unity/2D%20Platformer%20Template)**
 
-### Unreal Engine Samples - WIP Comming Soon
-
-#### **AI ARENA**
-- **Description:** Teambased game played by AI with multiple roles in a team, showcasing Unreal AI features.
-- **Tools & Technologies Used:** Unreal Engine 5.6, C++.
-- **Code sample will be available in late July**
-
 ## Contact Me
 
 Feel free to reach out if you have questions or if you are interested in collaborating on a project.
 
 - **Email:** michal.nowak.dev@gmail.com
+- **LinkedIN:** https://www.linkedin.com/in/micha%C5%82-nowak-21045a117/
 
 Thank you for visiting my portfolio!
