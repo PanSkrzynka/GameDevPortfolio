@@ -62,6 +62,7 @@ Additionally, I worked on the OpenCoop GameINN project. Although the project was
 **GPU Debugging:** RenderDoc, NVIDIA Nsight Graphics  
 **Performance Profiling:** Intel GPA
 *Platforms:** Expiriance working on Mobile, SteamDeck, and PC
+*SDK:** Steam,Epic, GoG
 
 
 
