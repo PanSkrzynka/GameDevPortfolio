@@ -42,12 +42,12 @@ Additionally, I worked on the OpenCoop GameINN project. Although the project was
 ### Unity (C#)
 **AI & Systems:** ML-Agents, DOTS, Zenject  
 **Procedural Gen:** MapMagic  
-**Editor Tools:** Odin Inspector, ScriptableObject Architecture  
+**Editor Tools:** Odin Inspector, Editor Scripting, ScriptableObject Architecture  
 **Networking:** Mirror, Photon PUN 2, Netcode for GameObjects  
 **Persistence:** Easy Save  
 **Input:** Rewired, Input System, Input Manager  
 **Audio:** FMOD  
-**Rendering:** Experience with Built-in, URP, and HDRP, 3D and 2D   
+**Rendering:** Experience with Built-in, URP, and HDRP, 3D and 2D , Shader Cration 
 **Testing & Debugging:** Test Framework, Profiler, Frame Debugger, Memory Profiler  
 
 ### Unreal Engine (C++ / Blueprints)
