@@ -11,7 +11,7 @@ public class OrbitingObjectData
     [Tooltip("If 0, a random distance will be assigned.")]
     public float distance = 0f;
 
-    [Tooltip("If 0, a random angle (0–360) will be assigned.")]
+    [Tooltip("If 0, a random angle (0-360) will be assigned.")]
     public float initialAngle = 0f;
 
     [Tooltip("Orbital plane inclination angle. Leave at 0 unless inclined orbits are needed.")]

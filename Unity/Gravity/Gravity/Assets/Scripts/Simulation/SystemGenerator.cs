@@ -3,51 +3,160 @@ using UnityEngine;
 public class SystemGenerator : MonoBehaviour
 {
     [SerializeField] private SystemConfig rootSystem;
-    [SerializeField] private float gravitationalConstant = 10f;
-    [SerializeField] private float massToScaleFactor = 0.05f;
+    [SerializeField, Min(0.0001f)] private float gravitationalConstant = 10f;
+    [SerializeField, Min(0.0001f)] private float massToScaleFactor = 0.05f;
+    [SerializeField, Min(1)] private int maxGenerationDepth = 6;
+    [SerializeField] private bool allowMultipleGenerators = false;
+    [SerializeField] private bool clearExistingChildrenOnStart = true;
+
+    private static int s_startedGenerators;
+    private bool _countedAsStarted;
 
     private void Start()
     {
-        GenerateSystemRecursively(rootSystem, transform, transform.position, Vector3.zero);
+        if (!allowMultipleGenerators && s_startedGenerators > 0)
+        {
+            Debug.LogWarning($"Skipping generation on '{name}' because another {nameof(SystemGenerator)} already ran.", this);
+            return;
+        }
+
+        s_startedGenerators++;
+        _countedAsStarted = true;
+
+        if (rootSystem == null)
+        {
+            Debug.LogError($"{nameof(SystemGenerator)} on {name} has no root system assigned.", this);
+            return;
+        }
+
+        if (clearExistingChildrenOnStart)
+            ClearChildren();
+
+        GenerateSystemRecursively(rootSystem, transform, transform.position, Vector3.zero, rootSystem.centralMass, 0);
     }
 
-    private void GenerateSystemRecursively(SystemConfig config, Transform parent, Vector3 position, Vector3 parentVelocity)
+    private void OnDestroy()
     {
-        GameObject centralObject = Instantiate(config.centralBodyPrefab, position, Quaternion.identity, parent);
+        if (!_countedAsStarted)
+            return;
 
-        var gravityComponent = centralObject.GetComponent<GravityObject>();
-        gravityComponent.mass = config.centralMass;
+        s_startedGenerators = Mathf.Max(0, s_startedGenerators - 1);
+        _countedAsStarted = false;
+    }
+
+    private void GenerateSystemRecursively(
+        SystemConfig config,
+        Transform parent,
+        Vector3 position,
+        Vector3 parentVelocity,
+        float centralMass,
+        int depth)
+    {
+        if (depth > maxGenerationDepth)
+            return;
+
+        if (config == null)
+            return;
+
+        if (config.centralBodyPrefab == null)
+        {
+            Debug.LogWarning($"System config '{config.name}' has no central body prefab.", this);
+            return;
+        }
+
+        GameObject centralObject = Instantiate(config.centralBodyPrefab, position, Quaternion.identity, parent);
+        centralObject.name = $"{config.name}_Body_{depth}";
+
+        if (!centralObject.TryGetComponent(out GravityObject gravityComponent))
+        {
+            Debug.LogWarning($"Prefab '{config.centralBodyPrefab.name}' has no {nameof(GravityObject)} component.", centralObject);
+            Destroy(centralObject);
+            return;
+        }
+
+        gravityComponent.mass = Mathf.Max(0.0001f, centralMass);
         gravityComponent.velocity = parentVelocity;
 
-        float visualScale = Mathf.Max(1f, config.centralMass * massToScaleFactor);
+        float visualScale = Mathf.Max(1f, centralMass * massToScaleFactor);
         centralObject.transform.localScale = Vector3.one * visualScale;
 
-        foreach (var orbitData in config.orbitingObjects)
+        if (config.orbitingObjects == null)
+            return;
+
+        foreach (OrbitingObjectData orbitData in config.orbitingObjects)
         {
-            float childMass = orbitData.bodyMass > 0f
-                ? orbitData.bodyMass
-                : Random.Range(config.centralMass * 0.01f, config.centralMass * 0.05f);
+            if (orbitData == null || orbitData.systemConfig == null)
+                continue;
 
-            orbitData.systemConfig.centralMass = childMass;
+            float childMass = ResolveChildMass(orbitData, orbitData.systemConfig, centralMass);
+            float distance = ResolveOrbitDistance(orbitData, centralMass, childMass);
 
-            float baseDistance = Mathf.Sqrt(config.centralMass) * Mathf.Pow(childMass, 0.35f);
-            float distance = orbitData.distance > 0f
-                ? orbitData.distance
-                : baseDistance + Random.Range(2f, 5f);
+            Vector3 orbitNormal = ResolveOrbitNormal(orbitData);
+            Vector3 radialDirection = GetPerpendicularDirection(orbitNormal);
 
-            Vector3 orbitNormal = orbitData.orbitalPlaneAngle != 0f
-                ? Quaternion.Euler(orbitData.orbitalPlaneAngle, 0, 0) * Vector3.up
-                : Random.onUnitSphere;
+            float initialAngle = orbitData.initialAngle != 0f
+                ? orbitData.initialAngle
+                : Random.Range(0f, 360f);
 
-            Vector3 orbitDirection = Vector3.Cross(orbitNormal, Random.onUnitSphere).normalized;
-            Vector3 offset = orbitDirection * distance;
+            Vector3 offset = Quaternion.AngleAxis(initialAngle, orbitNormal) * radialDirection * distance;
             Vector3 orbitPosition = position + offset;
 
-            float orbitalSpeed = Mathf.Sqrt(gravitationalConstant * config.centralMass / distance);
-            Vector3 tangent = Vector3.Cross(orbitNormal, offset).normalized;
+            float orbitalSpeed = Mathf.Sqrt(Mathf.Max(0.0001f, gravitationalConstant * centralMass / distance));
+            Vector3 tangent = Vector3.Cross(orbitNormal, offset.normalized).normalized;
             Vector3 velocity = parentVelocity + tangent * orbitalSpeed;
 
-            GenerateSystemRecursively(orbitData.systemConfig, parent, orbitPosition, velocity);
+            GenerateSystemRecursively(orbitData.systemConfig, parent, orbitPosition, velocity, childMass, depth + 1);
+        }
+    }
+
+    private static Vector3 ResolveOrbitNormal(OrbitingObjectData orbitData)
+    {
+        if (Mathf.Approximately(orbitData.orbitalPlaneAngle, 0f))
+            return Random.onUnitSphere.normalized;
+
+        return (Quaternion.Euler(orbitData.orbitalPlaneAngle, 0f, 0f) * Vector3.up).normalized;
+    }
+
+    private static Vector3 GetPerpendicularDirection(Vector3 normal)
+    {
+        Vector3 axis = Mathf.Abs(normal.y) > 0.99f ? Vector3.right : Vector3.up;
+        Vector3 perpendicular = Vector3.Cross(normal, axis);
+
+        if (perpendicular.sqrMagnitude <= Mathf.Epsilon)
+            perpendicular = Vector3.Cross(normal, Vector3.forward);
+
+        return perpendicular.normalized;
+    }
+
+    private static float ResolveChildMass(OrbitingObjectData orbitData, SystemConfig childConfig, float parentMass)
+    {
+        if (orbitData.bodyMass > 0f)
+            return orbitData.bodyMass;
+
+        if (childConfig.centralMass > 0f)
+            return childConfig.centralMass;
+
+        return Random.Range(parentMass * 0.01f, parentMass * 0.05f);
+    }
+
+    private static float ResolveOrbitDistance(OrbitingObjectData orbitData, float parentMass, float childMass)
+    {
+        if (orbitData.distance > 0f)
+            return orbitData.distance;
+
+        float baseDistance = Mathf.Sqrt(parentMass) * Mathf.Pow(childMass, 0.35f);
+        return Mathf.Max(1f, baseDistance + Random.Range(2f, 5f));
+    }
+
+    private void ClearChildren()
+    {
+        for (int i = transform.childCount - 1; i >= 0; i--)
+        {
+            Transform child = transform.GetChild(i);
+            if (Application.isPlaying)
+                Destroy(child.gameObject);
+            else
+                DestroyImmediate(child.gameObject);
         }
     }
 }

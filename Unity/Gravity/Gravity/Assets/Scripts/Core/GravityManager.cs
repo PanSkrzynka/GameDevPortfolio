@@ -14,4 +14,9 @@ public static class GravityManager
     {
         Objects.Remove(obj);
     }
+
+    public static void CleanupNullReferences()
+    {
+        Objects.RemoveAll(obj => obj == null);
+    }
 }

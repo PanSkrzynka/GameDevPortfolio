@@ -22,7 +22,11 @@ public class BarnesHutNode
 
     public void Insert(GravityObject body)
     {
+        if (body == null)
+            return;
+
         Vector3 position = body.transform.position;
+        float bodyMass = Mathf.Max(0.0001f, body.mass);
 
         if (IsLeaf)
         {
@@ -30,12 +34,15 @@ public class BarnesHutNode
             {
                 _singleBody = body;
                 CenterOfMass = position;
-                TotalMass = body.mass;
+                TotalMass = bodyMass;
                 return;
             }
 
             if (_depth >= MaxDepth || Bounds.size.x <= MinNodeSize)
+            {
+                UpdateMass(position, bodyMass);
                 return;
+            }
 
             Subdivide();
             InsertIntoChildren(_singleBody);
@@ -43,14 +50,20 @@ public class BarnesHutNode
         }
 
         InsertIntoChildren(body);
-        UpdateMass(body);
+        UpdateMass(position, bodyMass);
     }
 
-    private void UpdateMass(GravityObject body)
+    private void UpdateMass(Vector3 position, float mass)
     {
-        float m = body.mass;
-        CenterOfMass = (CenterOfMass * TotalMass + body.transform.position * m) / (TotalMass + m);
-        TotalMass += m;
+        if (TotalMass <= 0f)
+        {
+            CenterOfMass = position;
+            TotalMass = mass;
+            return;
+        }
+
+        CenterOfMass = (CenterOfMass * TotalMass + position * mass) / (TotalMass + mass);
+        TotalMass += mass;
     }
 
     private void InsertIntoChildren(GravityObject body)
@@ -90,6 +103,9 @@ public class BarnesHutNode
 
     public void ApplyForce(GravityObject target, float theta, float softening, float gravity)
     {
+        if (target == null || TotalMass <= 0f)
+            return;
+
         if (IsLeaf)
         {
             if (_singleBody == null || _singleBody == target)
@@ -99,13 +115,22 @@ public class BarnesHutNode
             return;
         }
 
-        Vector3 direction = CenterOfMass - target.transform.position;
-        float distance = direction.magnitude;
+        Vector3 targetPosition = target.transform.position;
+        Vector3 direction = CenterOfMass - targetPosition;
+        float softenedDistSqr = direction.sqrMagnitude + softening * softening;
 
-        if ((Bounds.size.x / distance) < theta)
+        if (softenedDistSqr <= Mathf.Epsilon)
+            return;
+
+        float softenedDistance = Mathf.Sqrt(softenedDistSqr);
+        bool nodeContainsTarget = Bounds.Contains(targetPosition);
+
+        if (!nodeContainsTarget && (Bounds.size.x / softenedDistance) < theta)
         {
-            float forceMagnitude = gravity * target.mass * TotalMass / Mathf.Pow(distance * distance + softening * softening, 1.5f);
-            target.AddForce(direction.normalized * forceMagnitude);
+            float invDist = 1f / softenedDistance;
+            float invDistCubed = invDist * invDist * invDist;
+            float forceScalar = gravity * target.mass * TotalMass * invDistCubed;
+            target.AddForce(direction * forceScalar);
         }
         else
         {
@@ -118,7 +143,13 @@ public class BarnesHutNode
     {
         Vector3 direction = b.transform.position - a.transform.position;
         float distSqr = direction.sqrMagnitude + softening * softening;
-        float forceMagnitude = gravity * a.mass * b.mass / Mathf.Pow(distSqr, 1.5f);
-        a.AddForce(direction.normalized * forceMagnitude);
+
+        if (distSqr <= Mathf.Epsilon)
+            return;
+
+        float invDist = 1f / Mathf.Sqrt(distSqr);
+        float invDistCubed = invDist * invDist * invDist;
+        float forceScalar = gravity * a.mass * b.mass * invDistCubed;
+        a.AddForce(direction * forceScalar);
     }
 }
