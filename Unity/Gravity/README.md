@@ -28,8 +28,8 @@ The simulation is currently capable of maintaining:
 
 | Object Count | Average Frame Rate |
 | ------------ | ------------------ |
-| 200          | \~60 FPS           |
-| 300          | \~30 FPS           |
+| 2000          | \~60 FPS           |
+| 3000          | \~30 FPS           |
 
 Benchmarked in Unity 6.0 on a mid-range setup.
 
