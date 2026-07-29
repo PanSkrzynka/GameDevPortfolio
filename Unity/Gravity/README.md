@@ -5,7 +5,19 @@ This is a custom-built gravity simulation based on the Barnes-Hut algorithm, imp
 
 ##  Showcase
 
-![1](gifs/gravity1.gif)  ![2](gifs/gravity2.gif)  ![3](gifs/gravity3.gif) 
+**Nested system**
+
+![Orbiting system with trails](gifs/01-orbiting-system.gif)
+
+**Wider view**
+
+![Multi-body cluster](gifs/02-nebula-cluster.gif)
+
+**Black hole**
+
+![Black hole](gifs/03-black-hole.gif)
+
+![Simulation speed ramp](gifs/04-speed-ramp.gif)
 
 ## Project Goals
 
@@ -22,24 +34,11 @@ This is a custom-built gravity simulation based on the Barnes-Hut algorithm, imp
 - **Physics Integration**: Forces are applied per-frame, and object velocities and positions are updated using a basic integrator.
 - **Camera Control**: A free-look orbit camera allows switching between tracked objects with full mouse control and zoom.
 
-## Performance
-
-The simulation is currently capable of maintaining:
-
-| Object Count | Average Frame Rate |
-| ------------ | ------------------ |
-| 2000          | \~60 FPS           |
-| 3000          | \~30 FPS           |
-
-Benchmarked in Unity 6.0 on a mid-range setup.
-
 ## Planned Improvements
 
 While the core system is stable and functional, I plan to explore several optimizations and extensions:
 
 - Migrate physics logic to Unity's Job System and Burst Compiler for multithreaded force calculations.
-- Implement object pooling for generated bodies to reduce instantiation overhead during recursive generation.
-- Introduce dynamic LOD (level of detail) for faraway or less relevant bodies.
 - Improve simulation stability with adaptive time stepping or better integration methods.
 - Add UI for system configuration and visualization overlays.
 
