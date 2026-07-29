@@ -8,6 +8,9 @@ public class SystemConfig : ScriptableObject
     public GameObject centralBodyPrefab;
     public float centralMass = 1000f;
 
+    [Tooltip("Look of this body. Leave empty and BodyAppearance derives one from mass.")]
+    public BodyVisualProfile visualProfile;
+
     [Header("Orbiting Bodies")]
     public List<OrbitingObjectData> orbitingObjects = new();
 }

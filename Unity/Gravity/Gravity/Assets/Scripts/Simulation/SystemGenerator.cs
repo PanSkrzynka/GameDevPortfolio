@@ -2,12 +2,33 @@ using UnityEngine;
 
 public class SystemGenerator : MonoBehaviour
 {
+    private const float MinMass = 0.0001f;
+    private const float FullCircleDegrees = 360f;
+    private const float PoleAlignmentThreshold = 0.99f;
+
     [SerializeField] private SystemConfig rootSystem;
-    [SerializeField, Min(0.0001f)] private float gravitationalConstant = 10f;
-    [SerializeField, Min(0.0001f)] private float massToScaleFactor = 0.05f;
+    [SerializeField, Min(MinMass)] private float gravitationalConstant = 10f;
+    [SerializeField, Min(MinMass)] private float massToScaleFactor = 0.05f;
     [SerializeField, Min(1)] private int maxGenerationDepth = 6;
     [SerializeField] private bool allowMultipleGenerators = false;
     [SerializeField] private bool clearExistingChildrenOnStart = true;
+
+    [Header("Visual Scale")]
+    [Tooltip("Smallest visual scale a body can be given, regardless of mass.")]
+    [SerializeField, Min(0.01f)] private float minVisualScale = 1f;
+
+    [Header("Fallback Mass")]
+    [Tooltip("Child mass as a fraction of its parent when neither the orbit data nor the child config specifies one.")]
+    [SerializeField] private Vector2 randomChildMassFraction = new(0.01f, 0.05f);
+
+    [Header("Fallback Orbit Distance")]
+    [Tooltip("Exponent applied to child mass when deriving an unspecified orbit distance.")]
+    [SerializeField] private float childMassDistanceExponent = 0.35f;
+
+    [Tooltip("Random padding added to a derived orbit distance.")]
+    [SerializeField] private Vector2 randomDistancePadding = new(2f, 5f);
+
+    [SerializeField, Min(0.01f)] private float minOrbitDistance = 1f;
 
     private static int s_startedGenerators;
     private bool _countedAsStarted;
@@ -74,11 +95,14 @@ public class SystemGenerator : MonoBehaviour
             return;
         }
 
-        gravityComponent.mass = Mathf.Max(0.0001f, centralMass);
+        gravityComponent.mass = Mathf.Max(MinMass, centralMass);
         gravityComponent.velocity = parentVelocity;
 
-        float visualScale = Mathf.Max(1f, centralMass * massToScaleFactor);
+        float visualScale = Mathf.Max(minVisualScale, centralMass * massToScaleFactor);
         centralObject.transform.localScale = Vector3.one * visualScale;
+
+        if (centralObject.TryGetComponent(out BodyAppearance appearance))
+            appearance.Apply(config.visualProfile, centralMass);
 
         if (config.orbitingObjects == null)
             return;
@@ -96,12 +120,12 @@ public class SystemGenerator : MonoBehaviour
 
             float initialAngle = orbitData.initialAngle != 0f
                 ? orbitData.initialAngle
-                : Random.Range(0f, 360f);
+                : Random.Range(0f, FullCircleDegrees);
 
             Vector3 offset = Quaternion.AngleAxis(initialAngle, orbitNormal) * radialDirection * distance;
             Vector3 orbitPosition = position + offset;
 
-            float orbitalSpeed = Mathf.Sqrt(Mathf.Max(0.0001f, gravitationalConstant * centralMass / distance));
+            float orbitalSpeed = Mathf.Sqrt(Mathf.Max(MinMass, gravitationalConstant * centralMass / distance));
             Vector3 tangent = Vector3.Cross(orbitNormal, offset.normalized).normalized;
             Vector3 velocity = parentVelocity + tangent * orbitalSpeed;
 
@@ -119,7 +143,7 @@ public class SystemGenerator : MonoBehaviour
 
     private static Vector3 GetPerpendicularDirection(Vector3 normal)
     {
-        Vector3 axis = Mathf.Abs(normal.y) > 0.99f ? Vector3.right : Vector3.up;
+        Vector3 axis = Mathf.Abs(normal.y) > PoleAlignmentThreshold ? Vector3.right : Vector3.up;
         Vector3 perpendicular = Vector3.Cross(normal, axis);
 
         if (perpendicular.sqrMagnitude <= Mathf.Epsilon)
@@ -128,7 +152,7 @@ public class SystemGenerator : MonoBehaviour
         return perpendicular.normalized;
     }
 
-    private static float ResolveChildMass(OrbitingObjectData orbitData, SystemConfig childConfig, float parentMass)
+    private float ResolveChildMass(OrbitingObjectData orbitData, SystemConfig childConfig, float parentMass)
     {
         if (orbitData.bodyMass > 0f)
             return orbitData.bodyMass;
@@ -136,16 +160,16 @@ public class SystemGenerator : MonoBehaviour
         if (childConfig.centralMass > 0f)
             return childConfig.centralMass;
 
-        return Random.Range(parentMass * 0.01f, parentMass * 0.05f);
+        return Random.Range(parentMass * randomChildMassFraction.x, parentMass * randomChildMassFraction.y);
     }
 
-    private static float ResolveOrbitDistance(OrbitingObjectData orbitData, float parentMass, float childMass)
+    private float ResolveOrbitDistance(OrbitingObjectData orbitData, float parentMass, float childMass)
     {
         if (orbitData.distance > 0f)
             return orbitData.distance;
 
-        float baseDistance = Mathf.Sqrt(parentMass) * Mathf.Pow(childMass, 0.35f);
-        return Mathf.Max(1f, baseDistance + Random.Range(2f, 5f));
+        float baseDistance = Mathf.Sqrt(parentMass) * Mathf.Pow(childMass, childMassDistanceExponent);
+        return Mathf.Max(minOrbitDistance, baseDistance + Random.Range(randomDistancePadding.x, randomDistancePadding.y));
     }
 
     private void ClearChildren()

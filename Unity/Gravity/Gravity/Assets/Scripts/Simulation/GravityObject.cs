@@ -2,10 +2,14 @@ using UnityEngine;
 
 public class GravityObject : MonoBehaviour
 {
-    [Min(0.0001f)] public float mass = 1f;
+    private const float MinMass = 0.0001f;
+    private const float MinTrailWidth = 0.001f;
+
+    [Min(MinMass)] public float mass = 1f;
     public Vector3 velocity;
+
     [SerializeField] private bool autoScaleTrailWidth = true;
-    [SerializeField, Min(0.001f)] private float trailWidthScale = 0.08f;
+    [SerializeField, Min(MinTrailWidth)] private float trailWidthScale = 0.08f;
     [SerializeField] private Vector2 trailWidthLimits = new(0.03f, 1f);
 
     private Vector3 _accumulatedForce;
@@ -18,7 +22,7 @@ public class GravityObject : MonoBehaviour
 
     public void Integrate(float deltaTime)
     {
-        float safeMass = Mathf.Max(0.0001f, mass);
+        float safeMass = Mathf.Max(MinMass, mass);
         Vector3 acceleration = _accumulatedForce / safeMass;
         velocity += acceleration * deltaTime;
         transform.position += velocity * deltaTime;
@@ -26,6 +30,8 @@ public class GravityObject : MonoBehaviour
     }
 
     public void ResetForce() => _accumulatedForce = Vector3.zero;
+
+    public void RefreshTrailAppearance() => UpdateTrailAppearance();
 
     private void Awake()
     {
@@ -35,10 +41,10 @@ public class GravityObject : MonoBehaviour
 
     private void OnValidate()
     {
-        mass = Mathf.Max(0.0001f, mass);
-        trailWidthLimits.x = Mathf.Max(0.001f, trailWidthLimits.x);
+        mass = Mathf.Max(MinMass, mass);
+        trailWidthLimits.x = Mathf.Max(MinTrailWidth, trailWidthLimits.x);
         trailWidthLimits.y = Mathf.Max(trailWidthLimits.x, trailWidthLimits.y);
-        trailWidthScale = Mathf.Max(0.001f, trailWidthScale);
+        trailWidthScale = Mathf.Max(MinTrailWidth, trailWidthScale);
 
         if (autoScaleTrailWidth && Application.isPlaying)
             UpdateTrailAppearance();

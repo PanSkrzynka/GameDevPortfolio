@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 6445360648454963697}
   - component: {fileID: 7490801503311992634}
   - component: {fileID: 6316164571339698706}
+  - component: {fileID: 946882852342836477}
   m_Layer: 0
   m_Name: GravityObject
   m_TagString: Untagged
@@ -63,10 +64,12 @@ MeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: fa8739aaf3ec7cf4aa4f020c2a68c10a, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -84,13 +87,15 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!96 &7490801503311992634
 TrailRenderer:
-  serializedVersion: 3
+  serializedVersion: 4
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -109,10 +114,12 @@ TrailRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 1aef7f7bce6bbb2499a2b0b53f6bc690, type: 2}
+  - {fileID: 2100000, guid: 1e21ab74859169543a24c838a2c02bc5, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -130,10 +137,12 @@ TrailRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Time: 3
+  m_MaskInteraction: 0
+  m_Time: 3.5
   m_PreviewTimeScale: 1
   m_Parameters:
     serializedVersion: 3
@@ -192,15 +201,14 @@ TrailRenderer:
       m_ColorSpace: 0
       m_NumColorKeys: 2
       m_NumAlphaKeys: 2
-    numCornerVertices: 0
-    numCapVertices: 0
+    numCornerVertices: 2
+    numCapVertices: 2
     alignment: 0
     textureMode: 0
     textureScale: {x: 1, y: 1}
     shadowBias: 0.5
     generateLightingData: 0
-  m_MinVertexDistance: 0.1
-  m_MaskInteraction: 0
+  m_MinVertexDistance: 0.08
   m_Autodestruct: 0
   m_Emitting: 1
   m_ApplyActiveColorSpace: 1
@@ -218,3 +226,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mass: 1
   velocity: {x: 0, y: 0, z: 0}
+  autoScaleTrailWidth: 1
+  trailWidthScale: 0.08
+  trailWidthLimits: {x: 0.03, y: 1}
+--- !u!114 &946882852342836477
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3045622913248173529}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7cb5073d6aa3568429c4b4ccc7748405, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BodyAppearance
+  profileOverride: {fileID: 0}
+  haloMaterial: {fileID: 2100000, guid: d01d08bb66e231a44baa300e86dc52fc, type: 2}
+  gasGiantMassThreshold: 1.5
+  starMassThreshold: 8
+  blackHoleMassThreshold: 400
+  starTemperatureMassRange: {x: 8, y: 120}
+  maxSceneLights: 8
