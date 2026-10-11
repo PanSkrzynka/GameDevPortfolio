@@ -5,13 +5,13 @@ A Tactical RPG Prototype Built with Unreal Engine 5
 
 ---
 
-##  Gameplay Showcase
+## Gameplay Showcase
 
  ![Player Turn](gifs/parable1.gif)  ![Combat](gifs/parable2.gif)  ![Enemy AI](gifs/parable3.gif) 
 
 ---
 
-##  Core Systems
+## Core Systems
 
 ### Gameplay Ability System (GAS)
 - Modular movement, attack, and unit actions
@@ -22,7 +22,7 @@ A Tactical RPG Prototype Built with Unreal Engine 5
 - Tile-based movement and targeting
 - Visual highlights for range and paths
 - Turn state machine per unit
-- Support terrain modifiers
+- Support for terrain modifiers
 
 ### Enemy AI
 - Pathfinding and range-aware decision-making
@@ -36,17 +36,17 @@ A Tactical RPG Prototype Built with Unreal Engine 5
 
 ---
 
-##  Project Purpose
+## Project Purpose
 
 **Parable of ReEvolution** is designed to demonstrate:
-- Mastery of Unreal’s Gameplay Ability System in a turn-based context
+- Use of Unreal’s Gameplay Ability System for turn-based actions
 - Tactical RPG core mechanics: movement, combat, turn control
 - Modular AI and UI systems
-- Clean Unreal architecture suited for scale and polish
+- Separation of grid, unit, ability, and turn-management responsibilities
 
 ---
 
-##  Built With
+## Built With
 
 - Unreal Engine 5.4+  
 - Gameplay Ability System (GAS)  
@@ -56,14 +56,18 @@ A Tactical RPG Prototype Built with Unreal Engine 5
 
 ---
 
-##  Current Status
+## Source Availability
 
-This is a gameplay prototype — all visuals are placeholder.  
-Focus is on functionality, responsiveness, and expandability.
+This is a personal project I develop in my free time. I share gameplay GIFs and project notes to show its progress, while keeping the source code and Blueprint assets private.
+
+## Current Status
+
+This is a gameplay prototype with placeholder visuals.  
+The focus is on gameplay rules, responsive controls, and room for further development.
 
 ---
 
-## 📌 Roadmap Concepts
+## Possible Extensions
 
 - Class system with passive and active skills  
 - Weapon triangle & terrain modifiers  

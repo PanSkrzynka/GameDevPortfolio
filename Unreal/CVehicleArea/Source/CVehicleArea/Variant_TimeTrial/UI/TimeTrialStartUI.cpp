@@ -1,5 +1,3 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
-
 #include "TimeTrialStartUI.h"
 
 void UTimeTrialStartUI::StartCountdown()

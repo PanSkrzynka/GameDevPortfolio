@@ -1,5 +1,3 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
-
 #include "CVehicleAreaUI.h"
 
 void UCVehicleAreaUI::UpdateSpeed(float NewSpeed)

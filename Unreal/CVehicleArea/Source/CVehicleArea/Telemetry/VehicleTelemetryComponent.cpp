@@ -101,6 +101,7 @@ float UVehicleTelemetryComponent::MeasureWheelbase() const
 
 void UVehicleTelemetryComponent::StartRecording()
 {
+	ChannelDisplayRanges.Reset();
 	bIsRecording = true;
 	ElapsedTime = 0.0f;
 	SampleTimer = 0.0f;
@@ -115,6 +116,7 @@ void UVehicleTelemetryComponent::StopRecording()
 
 void UVehicleTelemetryComponent::ClearHistory()
 {
+	ChannelDisplayRanges.Reset();
 	WriteIndex = 0;
 	FrameCount = 0;
 }
@@ -331,6 +333,18 @@ void UVehicleTelemetryComponent::PushFrame(FVehicleTelemetryFrame&& Frame)
 		return;
 	}
 
+	constexpr double ScaleStep = 5.0;
+	for (uint8 Index = 0; Index <= static_cast<uint8>(EVehicleTelemetryChannel::FrontAxleLoad); ++Index)
+	{
+		const auto Channel = static_cast<EVehicleTelemetryChannel>(Index);
+		const double Value = ExtractChannel(Frame, Channel);
+		if (!FMath::IsFinite(Value)) { continue; }
+		FVector2D Range = GetChannelDisplayRange(Channel);
+		if (Value < Range.X) { Range.X = FMath::FloorToDouble(Value / ScaleStep) * ScaleStep; }
+		if (Value > Range.Y) { Range.Y = FMath::CeilToDouble(Value / ScaleStep) * ScaleStep; }
+		ChannelDisplayRanges.Add(Channel, Range);
+	}
+
 	History[WriteIndex] = MoveTemp(Frame);
 	WriteIndex = (WriteIndex + 1) % History.Num();
 	FrameCount = FMath::Min(FrameCount + 1, History.Num());
@@ -403,6 +417,54 @@ void UVehicleTelemetryComponent::GetChannelHistory(EVehicleTelemetryChannel Chan
 		{
 			OutValues.Add(ExtractChannel(Frame, Channel));
 		}
+	}
+}
+
+FVector2D UVehicleTelemetryComponent::GetChannelDisplayRange(EVehicleTelemetryChannel Channel) const
+{
+	if (const FVector2D* Range = ChannelDisplayRanges.Find(Channel)) { return *Range; }
+	switch (Channel)
+	{
+	case EVehicleTelemetryChannel::Steering:
+	case EVehicleTelemetryChannel::LongitudinalG:
+	case EVehicleTelemetryChannel::LateralG:
+	case EVehicleTelemetryChannel::YawRate:
+	case EVehicleTelemetryChannel::YawRateError:
+	case EVehicleTelemetryChannel::BodySlipAngle:
+	case EVehicleTelemetryChannel::UndersteerBalance:
+		return FVector2D(-5.0, 5.0);
+	default:
+		return FVector2D(0.0, 5.0);
+	}
+}
+
+void UVehicleTelemetryComponent::GetChannelWindow(EVehicleTelemetryChannel Channel, float DurationSeconds, TArray<FVector2D>& OutSamples) const
+{
+	OutSamples.Reset();
+	if (FrameCount == 0 || History.IsEmpty() || !bHasPrevVelocity)
+	{
+		return;
+	}
+
+	const float StartTime = ElapsedTime - FMath::Max(DurationSeconds, KINDA_SMALL_NUMBER);
+	int32 FirstOffset = 0;
+	float NewerTime = TNumericLimits<float>::Max();
+	for (int32 Offset = 0; Offset < FrameCount; ++Offset)
+	{
+		const int32 Index = (WriteIndex - 1 - Offset + History.Num()) % History.Num();
+		const FVehicleTelemetryFrame& Frame = History[Index];
+		if (Frame.TimeSeconds >= NewerTime) { break; }
+		NewerTime = Frame.TimeSeconds;
+		FirstOffset = Offset;
+		if (Frame.TimeSeconds <= StartTime) { break; }
+	}
+
+	OutSamples.Reserve(FirstOffset + 1);
+	for (int32 Offset = FirstOffset; Offset >= 0; --Offset)
+	{
+		const int32 Index = (WriteIndex - 1 - Offset + History.Num()) % History.Num();
+		const FVehicleTelemetryFrame& Frame = History[Index];
+		OutSamples.Add(FVector2D(Frame.TimeSeconds, ExtractChannel(Frame, Channel)));
 	}
 }
 

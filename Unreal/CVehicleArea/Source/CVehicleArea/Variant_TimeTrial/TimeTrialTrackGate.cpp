@@ -1,5 +1,3 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
-
 #include "TimeTrialTrackGate.h"
 #include "Components/SceneComponent.h"
 #include "Components/BoxComponent.h"

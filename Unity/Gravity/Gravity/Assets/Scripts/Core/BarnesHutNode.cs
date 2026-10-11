@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class BarnesHutNode
@@ -12,6 +13,7 @@ public class BarnesHutNode
 
     private int _depth;
     private GravityObject _singleBody;
+    private List<GravityObject> _additionalBodies;
     private BarnesHutNode[] _children;
 
     public BarnesHutNode(Bounds bounds, int depth = 0)
@@ -40,6 +42,8 @@ public class BarnesHutNode
 
             if (_depth >= MaxDepth || Bounds.size.x <= MinNodeSize)
             {
+                _additionalBodies ??= new List<GravityObject>();
+                _additionalBodies.Add(body);
                 UpdateMass(position, bodyMass);
                 return;
             }
@@ -108,10 +112,16 @@ public class BarnesHutNode
 
         if (IsLeaf)
         {
-            if (_singleBody == null || _singleBody == target)
-                return;
-
-            ApplyDirectForce(target, _singleBody, softening, gravity);
+            if (_singleBody != null && _singleBody != target)
+                ApplyDirectForce(target, _singleBody, softening, gravity);
+            if (_additionalBodies != null)
+            {
+                foreach (var body in _additionalBodies)
+                {
+                    if (body != null && body != target)
+                        ApplyDirectForce(target, body, softening, gravity);
+                }
+            }
             return;
         }
 

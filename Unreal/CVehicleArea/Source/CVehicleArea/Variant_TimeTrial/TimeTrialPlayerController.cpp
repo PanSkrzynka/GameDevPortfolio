@@ -1,5 +1,3 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
-
 #include "TimeTrialPlayerController.h"
 #include "TimeTrialUI.h"
 #include "Engine/World.h"

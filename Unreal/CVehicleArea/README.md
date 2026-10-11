@@ -1,39 +1,43 @@
-# CVS DEBUG (Unreal Engine 5)
+# Chaos Vehicle Debug
 
-Project showing knowledge and understanding of the Chaos Vehicles plugin. The project uses Epic's vehicle template as a base and adds debugging and telemetry tools useful in setting up and testing new vehicle setups. It records laps, exports telemetry to CSV and allows ghost replays.
-It can be put into a game project to test vehicle behavior with minimal setup.
+Debugging and telemetry tools built on Epic's vehicle template in Unreal Engine 5.8. The project provides live vehicle measurements, lap recording, CSV export, and ghost replays to help inspect and tune Chaos Vehicles.
+
+## Code to Explore
+
+- [UVehicleTelemetryComponent](Source/CVehicleArea/Telemetry/VehicleTelemetryComponent.cpp): Samples Chaos vehicle data, stores history in a ring buffer, and provides channel data for graphs and CSV export. Start with `GetChannelHistory` and `BuildSummary` to see how recorded data becomes useful diagnostics.
+- [FRacingLine](Source/CVehicleArea/Race/RacingLine.cpp): Turns recorded vehicle motion into a sampled racing line with curvature and target speeds. `FindNearestPoint` and `SampleAtDistance` show how the line is queried during driving.
 
 ## Showcase
 
-**Core page** — tachometer, gear and speed, throttle / brake / steering with a rolling input strip, assist lights, longitudinal and lateral g, and the understeer balance readout.
+**Core page:** tachometer, gear and speed, throttle / brake / steering with a rolling input strip, assist lights, longitudinal and lateral g, and the understeer balance readout.
 
 ![Core telemetry page](gifs/01-core-inputs.gif)
 
-**Wheels page** — per-corner load in plan view, and for each wheel the contact surface, drive torque, normalized load, slip ratio and slip angle.
+**Wheels page:** per-corner load in plan view, and for each wheel the contact surface, drive torque, normalized load, slip ratio and slip angle.
 
 ![Per-wheel load and slip](gifs/02-wheels-grip.gif)
 
-**Balance page** — traction circle with peak-g hold, front and left load split, body slip angle, and yaw rate against target.
+**Balance page:** traction circle with peak-g hold, front and left load split, body slip angle, and yaw rate against target.
 
 ![Traction circle and load balance](gifs/03-traction-circle.gif)
 
-**Graphs page** — four telemetry channels decimated straight out of the ring buffer, here holding around 2000 samples.
+**Graphs page:** four telemetry channels decimated straight out of the ring buffer, here holding around 2000 samples.
 
 ![Live telemetry traces](gifs/04-telemetry-traces.gif)
 
-**Load transfer over a jump** — the wheels page with the car airborne: contact drops to 1/4, the front wheels report `air`, and load returns on landing.
+**Load transfer over a jump:** the wheels page with the car airborne: contact drops to 1/4, the front wheels report `air`, and load returns on landing.
 
 ![Wheel load during a jump](gifs/05-wheels-airborne.gif)
 
-**Ghost replay** — the best recorded lap played back as a ghost, caught and passed.
+**Ghost replay:** the best recorded lap played back as a ghost, caught and passed.
 
 ![Best-lap ghost replay](gifs/06-ghost-replay.gif)
 
 ## Project Goals
 
-- Demonstrate real command of the Chaos Vehicles API.
+- Expose useful Chaos Vehicles measurements through live telemetry and debugging tools.
 - Data-driven vehicle setup.
-- Creating a useful debugging tool for projects with Chaos Vehicles.
+- Provide debugging tools for projects using Chaos Vehicles.
 - Build control systems (traction control, ESC, ABS, active aero) on top of Chaos.
 - Turn a recorded lap into a racing line, a ghost, and an AI opponent.
 
@@ -84,7 +88,7 @@ It can be put into a game project to test vehicle behavior with minimal setup.
 
 ## Console Commands
 
-Systems are available as Console Commands:
+Systems are available through console commands:
 `CVehicle.Assists.*` toggle individual systems, `CVehicle.Telemetry.*` control recording and
 export, `CVehicle.Line.*` build the racing line, `CVehicle.Race.*` run a session, and
 `CVehicle.HUD.*` drive the overlay.
@@ -103,7 +107,7 @@ export, `CVehicle.Line.*` build the racing line, `CVehicle.Race.*` run a session
 
 ## Testing
 
-Project contains six automation tests. You can run them with:
+The project contains six automation tests. You can run them with:
 
 ```
 UnrealEditor-Cmd.exe CVehicleArea.uproject -ExecCmds="Automation RunTests CVehicleArea;Quit" -unattended -nullrhi -nosplash

@@ -74,6 +74,12 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Telemetry")
 	void GetChannelHistory(EVehicleTelemetryChannel Channel, int32 MaxSamples, TArray<float>& OutValues) const;
 
+	void GetChannelWindow(EVehicleTelemetryChannel Channel, float DurationSeconds, TArray<FVector2D>& OutSamples) const;
+
+	float GetRecordingTime() const { return ElapsedTime; }
+
+	FVector2D GetChannelDisplayRange(EVehicleTelemetryChannel Channel) const;
+
 	UFUNCTION(BlueprintCallable, Category = "Telemetry")
 	FVehicleTelemetrySummary BuildSummary() const;
 
@@ -113,6 +119,8 @@ private:
 	int32 WriteIndex = 0;
 
 	int32 FrameCount = 0;
+
+	TMap<EVehicleTelemetryChannel, FVector2D> ChannelDisplayRanges;
 
 	bool bIsRecording = false;
 

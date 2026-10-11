@@ -1,56 +1,51 @@
-# &#x20;Gravity Simulation (Unity)
+# Gravity
 
-This is a custom-built gravity simulation based on the Barnes-Hut algorithm, implemented in full 3D using Unity 6.0. The project focuses on performance, scalability, and visual clarity, simulating gravitational interactions between large numbers of bodies while maintaining interactive frame rates.
+A 3D gravity simulation built in Unity 6 with C#. It explores orbital motion and interactions between bodies using the Barnes-Hut algorithm. Generated systems, orbital trails, and camera controls make it possible to follow individual bodies or observe the whole scene.
 
+## Code to Explore
 
-##  Showcase
+- [BarnesHutNode](Gravity/Assets/Scripts/Core/BarnesHutNode.cs): Octree subdivision, mass aggregation, and the choice between direct force calculation and approximation. Start with `Insert` and `ApplyForce` for the core algorithm.
+- [BarnesHutGravityManager](Gravity/Assets/Scripts/Core/BarnesHutGravityManager.cs): Fixed simulation stepping, time-scale control, and coordination of tree construction, force calculation, and body integration.
 
-**Nested system**
+## Showcase
+
+**Orbital motion:** Follow a nested system and its movement trails.
 
 ![Orbiting system with trails](gifs/01-orbiting-system.gif)
 
-**Wider view**
+**System overview:** Pull the camera back to see several groups of bodies interacting.
 
 ![Multi-body cluster](gifs/02-nebula-cluster.gif)
 
-**Black hole**
+**Central attraction:** Observe bodies moving around a central attractor.
 
-![Black hole](gifs/03-black-hole.gif)
+![Bodies moving around a central attractor](gifs/03-black-hole.gif)
 
-![Simulation speed ramp](gifs/04-speed-ramp.gif)
+**Simulation speed:** Change the time scale to watch the system evolve.
 
-## Project Goals
+![Changing the simulation speed](gifs/04-speed-ramp.gif)
 
-- Build an n-body gravity simulation that remains performant with hundreds of dynamic objects.
-- Use the Barnes-Hut algorithm to approximate gravitational forces efficiently in 3D space.
-- Enable recursive generation of planetary systems with configurable hierarchies (e.g. planets, moons).
-- Provide an interactive camera system to explore complex orbital motion.
-- Structure the codebase for extensibility, allowing for easy future enhancements.
+## Implementation
 
-## How It Works
+- **Gravity calculation:** An octree groups bodies in space. Distant groups contribute an approximate combined force, while nearby interactions are evaluated in more detail.
+- **System generation:** ScriptableObject configurations define bodies and nested planetary systems.
+- **Simulation loop:** A fixed simulation step updates forces, velocity, and position. A time-scale control changes how quickly the simulation advances.
+- **Camera:** Orbit, zoom, and body tracking support both close inspection and wider views.
 
-- **Spatial Partitioning**: The Barnes-Hut algorithm organizes bodies into an octree structure, reducing the complexity of force calculations from O(n²) to approximately O(n log n).
-- **Recursive System Generation**: Planetary systems are generated procedurally based on scriptable configuration objects, allowing nested orbits and dynamic system layouts.
-- **Physics Integration**: Forces are applied per-frame, and object velocities and positions are updated using a basic integrator.
-- **Camera Control**: A free-look orbit camera allows switching between tracked objects with full mouse control and zoom.
+## Main Classes
 
-## Planned Improvements
+- `GravityObject`: Body mass, velocity, force accumulation, and integration.
+- `BarnesHutTree` and `BarnesHutNode`: Spatial grouping and gravitational force approximation.
+- `BarnesHutGravityManager`: Simulation stepping and time-scale control.
+- `SystemGenerator`: Creation of nested systems from configuration assets.
+- `OrbitCamera`: Camera movement and target tracking.
 
-While the core system is stable and functional, I plan to explore several optimizations and extensions:
+## Built With
 
-- Migrate physics logic to Unity's Job System and Burst Compiler for multithreaded force calculations.
-- Improve simulation stability with adaptive time stepping or better integration methods.
-- Add UI for system configuration and visualization overlays.
-
-## Architecture Highlights
-
-- `GravityObject`: Represents any mass in the simulation with velocity and force accumulation.
-- `BarnesHutTree` / `BarnesHutNode`: Core data structures for spatial subdivision and force approximation.
-- `SystemGenerator`: Recursively generates and positions nested planetary systems.
-- `SystemConfig`, `OrbitingObjectData`: Define system structure using ScriptableObjects for designer flexibility.
-- `OrbitCamera`: Allows smooth tracking and control of camera focus.
+Unity 6, C#, and ScriptableObjects.
 
 ## License
 
-This project is open-source under the MIT License.
+MIT.
 
+[Back to the portfolio](../../README.md)

@@ -60,64 +60,25 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Telemetry HUD")
 	void SetPage(EVehicleHUDPage NewPage);
 
+	virtual void BeginPlay() override;
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 	virtual void DrawHUD() override;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Telemetry HUD")
+	TSubclassOf<class UUserWidget> TelemetryWidgetClass;
+
 protected:
-
 	bool ResolveVehicle();
-
-	void DrawCorePage();
-	void DrawWheelsPage();
-	void DrawBalancePage();
-	void DrawGraphsPage();
-	void DrawStandingsPanel();
 	void DrawWorldDebug();
-
-	void DrawTachometer(float CenterX, float CenterY, float Radius, const FVehicleTelemetryFrame& Frame);
-	void DrawTractionCircle(float CenterX, float CenterY, float Radius, const FVehicleTelemetryFrame& Frame);
-	void DrawCarPlanView(float X, float Y, float Width, float Height, const FVehicleTelemetryFrame& Frame);
-	void DrawInputStrip(float X, float Y, float Width, float Height);
-	void DrawAssistLights(float X, float Y, float Width);
-	void DrawLapBlock(float X, float Y, float Width);
-
-	void DrawBar(float X, float Y, float Width, float Height, float Fraction, const FLinearColor& FillColor, const FString& Label, bool bBidirectional = false);
-	void DrawPanel(float X, float Y, float Width, float Height);
-	void DrawTrace(float X, float Y, float Width, float Height, const TArray<float>& Values, const FLinearColor& Color, const FString& Label);
-	void DrawLabel(const FString& Text, float X, float Y, const FLinearColor& Color, float Scale = 1.0f);
-	void DrawArc(float CenterX, float CenterY, float Radius, float StartDegrees, float EndDegrees, const FLinearColor& Color, float Thickness, int32 Segments = 48);
-	void DrawRing(float CenterX, float CenterY, float Radius, const FLinearColor& Color, float Thickness, int32 Segments = 48);
-	void DrawIndicator(float X, float Y, float Size, bool bLit, const FLinearColor& LitColor, const FString& Label);
-
 	static FLinearColor GetHeatColor(float Value);
-	static FString GetGearText(int32 Gear);
-	static FString FormatTime(float Seconds);
 
 private:
-
+	UPROPERTY(Transient)
+	TObjectPtr<UUserWidget> TelemetryWidget;
 	UPROPERTY(Transient)
 	TObjectPtr<APawn> VehiclePawn;
-
 	UPROPERTY(Transient)
 	TObjectPtr<UChaosWheeledVehicleMovementComponent> MovementComponent;
-
 	UPROPERTY(Transient)
 	TObjectPtr<UVehicleTelemetryComponent> Telemetry;
-
-	UPROPERTY(Transient)
-	TObjectPtr<UVehicleDriverAssistComponent> DriverAssists;
-
-	UPROPERTY(Transient)
-	TObjectPtr<UVehicleSurfaceResponseComponent> SurfaceResponse;
-
-	UPROPERTY(Transient)
-	TObjectPtr<UVehicleLapRecorderComponent> LapRecorder;
-
-	UPROPERTY(Transient)
-	TObjectPtr<UFont> HUDFont;
-
-	float UIScale = 1.0f;
-
-	TArray<FVector2D> GForceTrail;
-
-	float PeakCombinedG = 0.0f;
 };

@@ -1,0 +1,63 @@
+{
+  "source": "C:\\Users\\mikni\\Videos\\2026-10-11 21-31-10.mp4",
+  "width": 800,
+  "fps": 10,
+  "clips": [
+    {
+      "file": "01-free-pickup.gif",
+      "title": "Free pickup",
+      "start_seconds": 7,
+      "duration_seconds": 5,
+      "description": "Taking an unowned item without a theft response.",
+      "bytes": 3757244
+    },
+    {
+      "file": "02-witnessed-theft.gif",
+      "title": "Witnessed theft and bounty",
+      "start_seconds": 15,
+      "duration_seconds": 8,
+      "description": "Owned pickup, alarm, wanted status, and pursuit.",
+      "bytes": 5659004
+    },
+    {
+      "file": "03-confrontation-settlement.gif",
+      "title": "Guard confrontation and settlement",
+      "start_seconds": 31,
+      "duration_seconds": 9,
+      "description": "Multiple responders confront the player; compensation clears the bounty.",
+      "bytes": 4605478
+    },
+    {
+      "file": "04-noise-investigation.gif",
+      "title": "Sound investigation",
+      "start_seconds": 56,
+      "duration_seconds": 8,
+      "description": "A restricted-room visit triggers the visible hearing response and investigation.",
+      "bytes": 5526624
+    },
+    {
+      "file": "05-missing-items-search.gif",
+      "title": "Missing items and coordinated search",
+      "start_seconds": 64,
+      "duration_seconds": 12,
+      "description": "NPCs discover an absent valuable, share the report, and search the room.",
+      "bytes": 6607490
+    },
+    {
+      "file": "06-group-pursuit.gif",
+      "title": "Multiple guards pursuing",
+      "start_seconds": 98,
+      "duration_seconds": 10,
+      "description": "Two guards pursue together, with AI state and perception debug overlays.",
+      "bytes": 8003681
+    },
+    {
+      "file": "07-search-and-communication.gif",
+      "title": "Search and guard communication",
+      "start_seconds": 108,
+      "duration_seconds": 11,
+      "description": "Search states, guard reports, and separate search assignments remain visible in the debug view.",
+      "bytes": 8908571
+    }
+  ]
+}

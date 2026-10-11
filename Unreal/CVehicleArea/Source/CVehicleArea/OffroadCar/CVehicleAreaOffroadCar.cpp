@@ -1,5 +1,3 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
-
 #include "CVehicleAreaOffroadCar.h"
 #include "CVehicleAreaOffroadWheelFront.h"
 #include "CVehicleAreaOffroadWheelRear.h"

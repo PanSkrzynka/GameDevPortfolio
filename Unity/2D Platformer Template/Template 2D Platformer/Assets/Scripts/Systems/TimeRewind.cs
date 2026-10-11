@@ -1,13 +1,39 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody2D))]
 public class TimeRewind : MonoBehaviour
 {
-    private class RewindFrame
+    private sealed class ObjectSnapshot
+    {
+        public IRewindable Target;
+        public readonly List<object> Values = new(1);
+
+        public void Clear()
+        {
+            Target = null;
+            Values.Clear();
+        }
+    }
+
+    private sealed class RewindFrame
     {
         public Vector2 Position;
         public Vector2 Velocity;
-        public readonly Dictionary<IRewindable, object> Snapshot = new();
+        public readonly List<ObjectSnapshot> Snapshots = new();
+        public int SnapshotCount;
+
+        public ObjectSnapshot CaptureSlot()
+        {
+            if (SnapshotCount == Snapshots.Count) Snapshots.Add(new ObjectSnapshot());
+            return Snapshots[SnapshotCount++];
+        }
+
+        public void Clear()
+        {
+            for (int i = 0; i < SnapshotCount; i++) Snapshots[i].Clear();
+            SnapshotCount = 0;
+        }
     }
 
     [SerializeField] private InputBindings bindings;
@@ -17,7 +43,9 @@ public class TimeRewind : MonoBehaviour
 
     private static readonly List<IRewindable> Rewindables = new();
 
-    private readonly List<RewindFrame> _history = new();
+    private RewindFrame[] _history;
+    private int _nextFrame;
+    private int _frameCount;
     private Rigidbody2D _body;
     private bool _isRewinding;
     private float _rewindRemaining;
@@ -26,9 +54,17 @@ public class TimeRewind : MonoBehaviour
 
     public bool IsRewinding => _isRewinding;
 
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    private static void ResetRegistry() => Rewindables.Clear();
+
+    private static bool IsAlive(IRewindable target)
+    {
+        return target != null && (target is not Object unityObject || unityObject != null);
+    }
+
     public static void Register(IRewindable rewindable)
     {
-        if (rewindable != null && !Rewindables.Contains(rewindable)) Rewindables.Add(rewindable);
+        if (IsAlive(rewindable) && !Rewindables.Contains(rewindable)) Rewindables.Add(rewindable);
     }
 
     public static void Unregister(IRewindable rewindable)
@@ -40,6 +76,26 @@ public class TimeRewind : MonoBehaviour
     {
         _body = GetComponent<Rigidbody2D>();
         _fixedDelta = Time.fixedDeltaTime;
+        EnsureHistoryCapacity();
+    }
+
+    private void EnsureHistoryCapacity()
+    {
+        int capacity = Mathf.Max(1, Mathf.CeilToInt(rewindDuration / _fixedDelta));
+        if (_history != null && _history.Length == capacity) return;
+
+        RewindFrame[] resized = new RewindFrame[capacity];
+        int retained = Mathf.Min(_frameCount, capacity);
+        for (int i = 0; i < retained; i++)
+        {
+            int source = (_nextFrame - retained + i + _history.Length) % _history.Length;
+            resized[i] = _history[source];
+        }
+        for (int i = retained; i < capacity; i++) resized[i] = new RewindFrame();
+
+        _history = resized;
+        _frameCount = retained;
+        _nextFrame = retained % capacity;
     }
 
     private void Update()
@@ -58,7 +114,7 @@ public class TimeRewind : MonoBehaviour
         if (Input.GetKeyUp(bindings.Rewind)) _isRewinding = false;
     }
 
-    private bool CanRewind => _cooldownRemaining <= 0f && _history.Count > 0;
+    private bool CanRewind => _cooldownRemaining <= 0f && _frameCount > 0;
 
     private void BeginRewind()
     {
@@ -76,52 +132,61 @@ public class TimeRewind : MonoBehaviour
 
     private void Record()
     {
-        int maxFrames = Mathf.CeilToInt(rewindDuration / _fixedDelta);
-        if (_history.Count >= maxFrames) _history.RemoveAt(_history.Count - 1);
-
-        RewindFrame frame = new RewindFrame
-        {
-            Position = _body.position,
-            Velocity = _body.linearVelocity
-        };
+        EnsureHistoryCapacity();
+        RewindFrame frame = _history[_nextFrame];
+        frame.Clear();
+        frame.Position = _body.position;
+        frame.Velocity = _body.linearVelocity;
 
         for (int i = Rewindables.Count - 1; i >= 0; i--)
         {
             IRewindable rewindable = Rewindables[i];
-            if (rewindable == null)
+            if (!IsAlive(rewindable))
             {
                 Rewindables.RemoveAt(i);
                 continue;
             }
 
-            List<object> buffer = new List<object>();
-            rewindable.SaveState(buffer);
-
-            if (buffer.Count == 1) frame.Snapshot[rewindable] = buffer[0];
-            else if (buffer.Count > 1) frame.Snapshot[rewindable] = new List<object>(buffer);
+            ObjectSnapshot snapshot = frame.CaptureSlot();
+            snapshot.Target = rewindable;
+            rewindable.SaveState(snapshot.Values);
         }
 
-        _history.Insert(0, frame);
+        _nextFrame = (_nextFrame + 1) % _history.Length;
+        _frameCount = Mathf.Min(_frameCount + 1, _history.Length);
     }
 
     private void StepBack()
     {
-        if (_history.Count == 0)
+        if (_frameCount == 0)
         {
             _isRewinding = false;
             return;
         }
 
-        RewindFrame frame = _history[0];
+        _nextFrame = (_nextFrame - 1 + _history.Length) % _history.Length;
+        RewindFrame frame = _history[_nextFrame];
         _body.position = frame.Position;
         _body.linearVelocity = frame.Velocity;
 
-        foreach (KeyValuePair<IRewindable, object> entry in frame.Snapshot)
+        for (int i = 0; i < frame.SnapshotCount; i++)
         {
-            entry.Key?.LoadState(entry.Value);
+            ObjectSnapshot snapshot = frame.Snapshots[i];
+            if (!IsAlive(snapshot.Target) || snapshot.Values.Count == 0) continue;
+            snapshot.Target.LoadState(snapshot.Values.Count == 1 ? snapshot.Values[0] : snapshot.Values);
         }
 
-        _history.RemoveAt(0);
+        frame.Clear();
+        _frameCount--;
+    }
+
+    private void OnDisable()
+    {
+        if (_history != null)
+            foreach (RewindFrame frame in _history) frame.Clear();
+        _frameCount = 0;
+        _nextFrame = 0;
+        _isRewinding = false;
     }
 
     private void OnValidate()

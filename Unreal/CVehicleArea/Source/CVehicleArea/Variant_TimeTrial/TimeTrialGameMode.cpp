@@ -1,5 +1,3 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
-
 #include "TimeTrialGameMode.h"
 #include "Kismet/GameplayStatics.h"
 #include "TimeTrialTrackGate.h"

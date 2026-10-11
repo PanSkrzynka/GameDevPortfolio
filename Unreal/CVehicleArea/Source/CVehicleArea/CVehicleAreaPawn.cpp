@@ -1,5 +1,3 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
-
 #include "CVehicleAreaPawn.h"
 #include "CVehicleAreaWheelFront.h"
 #include "CVehicleAreaWheelRear.h"
