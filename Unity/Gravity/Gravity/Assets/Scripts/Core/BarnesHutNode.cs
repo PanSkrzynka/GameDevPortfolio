@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,160 +7,183 @@ public class BarnesHutNode
     private const float MinNodeSize = 0.01f;
     private const int MaxDepth = 15;
 
-    public Bounds Bounds { get; }
+    internal readonly struct BodySnapshot
+    {
+        public readonly GravityObject Body;
+        public readonly Vector3 Position;
+        public readonly float Mass;
+
+        public BodySnapshot(GravityObject body)
+        {
+            Body = body;
+            Position = body.transform.position;
+            Mass = Mathf.Max(0.0001f, body.mass);
+        }
+    }
+
+    public Bounds Bounds { get; private set; }
     public Vector3 CenterOfMass { get; private set; }
     public float TotalMass { get; private set; }
-    public bool IsLeaf => _children == null;
+    public bool IsLeaf => !_subdivided;
 
+    private readonly Stack<BarnesHutNode> _pool;
     private int _depth;
-    private GravityObject _singleBody;
-    private List<GravityObject> _additionalBodies;
+    private BodySnapshot _singleBody;
+    private List<BodySnapshot> _additionalBodies;
     private BarnesHutNode[] _children;
+    private bool _subdivided;
 
     public BarnesHutNode(Bounds bounds, int depth = 0)
+        : this(bounds, depth, new Stack<BarnesHutNode>()) { }
+
+    private BarnesHutNode(Bounds bounds, int depth, Stack<BarnesHutNode> pool)
     {
+        Bounds = bounds;
+        _depth = depth;
+        _pool = pool;
+    }
+
+    internal void Reset(Bounds bounds, int depth = 0)
+    {
+        if (_subdivided)
+        {
+            for (int i = 0; i < _children.Length; i++)
+            {
+                BarnesHutNode child = _children[i];
+                child.Reset(default);
+                _pool.Push(child);
+                _children[i] = null;
+            }
+        }
+        _subdivided = false;
+        _singleBody = default;
+        _additionalBodies?.Clear();
+        TotalMass = 0f;
+        CenterOfMass = Vector3.zero;
         Bounds = bounds;
         _depth = depth;
     }
 
     public void Insert(GravityObject body)
     {
-        if (body == null)
-            return;
+        if (body != null) Insert(new BodySnapshot(body));
+    }
 
-        Vector3 position = body.transform.position;
-        float bodyMass = Mathf.Max(0.0001f, body.mass);
+    internal void Insert(BodySnapshot body)
+    {
+        if (!Bounds.Contains(body.Position))
+            throw new ArgumentOutOfRangeException(nameof(body), "Body is outside the node bounds. Rebuild the tree to fit all bodies.");
+        InsertContained(body);
+    }
 
+    private void InsertContained(BodySnapshot body)
+    {
         if (IsLeaf)
         {
-            if (_singleBody == null)
+            if (_singleBody.Body == null)
             {
                 _singleBody = body;
-                CenterOfMass = position;
-                TotalMass = bodyMass;
+                CenterOfMass = body.Position;
+                TotalMass = body.Mass;
                 return;
             }
-
             if (_depth >= MaxDepth || Bounds.size.x <= MinNodeSize)
             {
-                _additionalBodies ??= new List<GravityObject>();
+                _additionalBodies ??= new List<BodySnapshot>();
                 _additionalBodies.Add(body);
-                UpdateMass(position, bodyMass);
+                UpdateMass(body);
                 return;
             }
-
             Subdivide();
-            InsertIntoChildren(_singleBody);
-            _singleBody = null;
+            InsertIntoChild(_singleBody);
+            _singleBody = default;
         }
-
-        InsertIntoChildren(body);
-        UpdateMass(position, bodyMass);
+        InsertIntoChild(body);
+        UpdateMass(body);
     }
 
-    private void UpdateMass(Vector3 position, float mass)
+    private void UpdateMass(BodySnapshot body)
     {
-        if (TotalMass <= 0f)
-        {
-            CenterOfMass = position;
-            TotalMass = mass;
-            return;
-        }
-
-        CenterOfMass = (CenterOfMass * TotalMass + position * mass) / (TotalMass + mass);
-        TotalMass += mass;
+        CenterOfMass = (CenterOfMass * TotalMass + body.Position * body.Mass) / (TotalMass + body.Mass);
+        TotalMass += body.Mass;
     }
 
-    private void InsertIntoChildren(GravityObject body)
+    private void InsertIntoChild(BodySnapshot body)
     {
-        foreach (var child in _children)
-        {
-            if (child.Bounds.Contains(body.transform.position))
-            {
-                child.Insert(body);
-                return;
-            }
-        }
-
-        _children[0].Insert(body);
+        Vector3 center = Bounds.center;
+        int index = (body.Position.x >= center.x ? 1 : 0)
+            | (body.Position.y >= center.y ? 2 : 0)
+            | (body.Position.z >= center.z ? 4 : 0);
+        _children[index].InsertContained(body);
     }
 
     private void Subdivide()
     {
-        _children = new BarnesHutNode[8];
-        Vector3 center = Bounds.center;
+        _children ??= new BarnesHutNode[8];
         Vector3 halfSize = Bounds.extents * 0.5f;
-
-        for (int i = 0; i < 8; i++)
+        for (int i = 0; i < _children.Length; i++)
         {
-            Vector3 offset = new(
-                (i & 1) == 0 ? -1 : 1,
-                (i & 2) == 0 ? -1 : 1,
-                (i & 4) == 0 ? -1 : 1
-            );
-
-            Vector3 newCenter = center + Vector3.Scale(offset, halfSize);
-            Vector3 size = Bounds.size * 0.5f;
-
-            _children[i] = new BarnesHutNode(new Bounds(newCenter, size), _depth + 1);
+            Vector3 offset = new((i & 1) == 0 ? -1 : 1, (i & 2) == 0 ? -1 : 1, (i & 4) == 0 ? -1 : 1);
+            Bounds childBounds = new(Bounds.center + Vector3.Scale(offset, halfSize), Bounds.size * 0.5f);
+            if (_pool.Count > 0)
+            {
+                _children[i] = _pool.Pop();
+                _children[i].Bounds = childBounds;
+                _children[i]._depth = _depth + 1;
+            }
+            else
+            {
+                _children[i] = new BarnesHutNode(childBounds, _depth + 1, _pool);
+            }
         }
+        _subdivided = true;
     }
 
     public void ApplyForce(GravityObject target, float theta, float softening, float gravity)
     {
-        if (target == null || TotalMass <= 0f)
-            return;
-
-        if (IsLeaf)
-        {
-            if (_singleBody != null && _singleBody != target)
-                ApplyDirectForce(target, _singleBody, softening, gravity);
-            if (_additionalBodies != null)
-            {
-                foreach (var body in _additionalBodies)
-                {
-                    if (body != null && body != target)
-                        ApplyDirectForce(target, body, softening, gravity);
-                }
-            }
-            return;
-        }
-
-        Vector3 targetPosition = target.transform.position;
-        Vector3 direction = CenterOfMass - targetPosition;
-        float softenedDistSqr = direction.sqrMagnitude + softening * softening;
-
-        if (softenedDistSqr <= Mathf.Epsilon)
-            return;
-
-        float softenedDistance = Mathf.Sqrt(softenedDistSqr);
-        bool nodeContainsTarget = Bounds.Contains(targetPosition);
-
-        if (!nodeContainsTarget && (Bounds.size.x / softenedDistance) < theta)
-        {
-            float invDist = 1f / softenedDistance;
-            float invDistCubed = invDist * invDist * invDist;
-            float forceScalar = gravity * target.mass * TotalMass * invDistCubed;
-            target.AddForce(direction * forceScalar);
-        }
-        else
-        {
-            foreach (var child in _children)
-                child?.ApplyForce(target, theta, softening, gravity);
-        }
+        if (target != null) ApplyForce(new BodySnapshot(target), theta, softening, gravity);
     }
 
-    private void ApplyDirectForce(GravityObject a, GravityObject b, float softening, float gravity)
+    internal void ApplyForce(BodySnapshot target, float theta, float softening, float gravity)
     {
-        Vector3 direction = b.transform.position - a.transform.position;
-        float distSqr = direction.sqrMagnitude + softening * softening;
+        target.Body.AddForce(CalculateForce(target, theta, softening * softening, gravity));
+    }
 
-        if (distSqr <= Mathf.Epsilon)
-            return;
+    private Vector3 CalculateForce(BodySnapshot target, float theta, float softeningSquared, float gravity)
+    {
+        if (TotalMass <= 0f) return Vector3.zero;
+        if (IsLeaf)
+        {
+            Vector3 force = DirectForce(target, _singleBody, softeningSquared, gravity);
+            if (_additionalBodies != null)
+                foreach (var body in _additionalBodies)
+                    force += DirectForce(target, body, softeningSquared, gravity);
+            return force;
+        }
 
-        float invDist = 1f / Mathf.Sqrt(distSqr);
-        float invDistCubed = invDist * invDist * invDist;
-        float forceScalar = gravity * a.mass * b.mass * invDistCubed;
-        a.AddForce(direction * forceScalar);
+        Vector3 direction = CenterOfMass - target.Position;
+        float distanceSquared = direction.sqrMagnitude + softeningSquared;
+        float distance = Mathf.Sqrt(distanceSquared);
+        if (!Bounds.Contains(target.Position) && distance > 0f && Bounds.size.x / distance < theta)
+            return Force(direction, target.Mass, TotalMass, distanceSquared, gravity);
+
+        Vector3 sum = Vector3.zero;
+        foreach (var child in _children)
+            sum += child.CalculateForce(target, theta, softeningSquared, gravity);
+        return sum;
+    }
+
+    private static Vector3 DirectForce(BodySnapshot target, BodySnapshot source, float softeningSquared, float gravity)
+    {
+        if (source.Body == null || source.Body == target.Body) return Vector3.zero;
+        Vector3 direction = source.Position - target.Position;
+        return Force(direction, target.Mass, source.Mass, direction.sqrMagnitude + softeningSquared, gravity);
+    }
+
+    private static Vector3 Force(Vector3 direction, float targetMass, float sourceMass, float distanceSquared, float gravity)
+    {
+        if (distanceSquared <= Mathf.Epsilon) return Vector3.zero;
+        float inverseDistance = 1f / Mathf.Sqrt(distanceSquared);
+        return direction * (gravity * targetMass * sourceMass * inverseDistance * inverseDistance * inverseDistance);
     }
 }

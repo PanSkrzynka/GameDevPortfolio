@@ -19,57 +19,79 @@ class NPCPROPERTY_API APropertyAIController : public AAIController
 public:
 	APropertyAIController();
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="AI")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI")
 	TObjectPtr<UStateTreeAIComponent> StateTree;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="AI")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI")
 	TObjectPtr<UAISenseConfig_Sight> SightConfig;
 
-	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category="Response")
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "Response")
 	EPropertyResponseState DesiredResponse = EPropertyResponseState::Routine;
 
-	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category="Response")
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "Response")
 	EPropertyResponseState ActiveResponse = EPropertyResponseState::Routine;
 
-	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category="Response")
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "Response")
 	FVector LastKnownLocation = FVector::ZeroVector;
 
-	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category="Response")
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "Response")
 	FVector SearchDestination = FVector::ZeroVector;
 
-	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category="Response")
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "Response")
 	FVector HomeLocation = FVector::ZeroVector;
 
-	UFUNCTION(BlueprintPure, Category="Response")
-	AActor* GetSuspect() const { return Suspect.Get(); }
+	UFUNCTION(BlueprintPure, Category = "Response")
+	AActor* GetSuspect() const
+	{
+		return Suspect.Get();
+	}
 
-	UFUNCTION(BlueprintPure, Category="Response")
+	UFUNCTION(BlueprintPure, Category = "Response")
 	bool HasVisibleSuspect() const;
 
-	UFUNCTION(BlueprintPure, Category="Response")
-	bool IsEscortingTrespasser() const { return Suspect.IsValid() && !bPursuingOffender && !bQuestioning && !bResisting; }
+	UFUNCTION(BlueprintPure, Category = "Response")
+	bool IsEscortingTrespasser() const
+	{
+		return Suspect.IsValid() && !bPursuingOffender && !bQuestioning && !bResisting;
+	}
 
-	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category="Response") bool bResisting = false;
-	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category="Routine") FText CurrentActivity;
-	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category="Routine") int32 RoutineEntry = INDEX_NONE;
-	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category="Routine") int32 Waypoint = 0;
-	UFUNCTION(BlueprintPure, Category="Confrontation") int32 GetCompensation() const;
-	UFUNCTION(BlueprintCallable, Category="Confrontation") bool ResolveConfrontation(AActor* Player, EConfrontationChoice Choice);
-	UFUNCTION(BlueprintPure, Category="Response") bool IsGuard() const;
-	UFUNCTION(BlueprintPure, Category="Response") bool CanEnforceAt(FVector Location) const;
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "Response")
+	bool bResisting = false;
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "Routine")
+	FText CurrentActivity;
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "Routine")
+	int32 RoutineEntry = INDEX_NONE;
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "Routine")
+	int32 Waypoint = 0;
+	UFUNCTION(BlueprintPure, Category = "Confrontation")
+	int32 GetCompensation() const;
+	UFUNCTION(BlueprintCallable, Category = "Confrontation")
+	bool ResolveConfrontation(AActor* Player, EConfrontationChoice Choice);
+	UFUNCTION(BlueprintPure, Category = "Response")
+	bool IsGuard() const;
+	UFUNCTION(BlueprintPure, Category = "Response")
+	bool CanEnforceAt(FVector Location) const;
 	bool CanEnforceArea(const APropertyArea* Area) const;
 	void RespondToCrimeReport();
 	bool Investigate(FVector Location, bool bAlarm = false);
 	virtual void UpdateControlRotation(float DeltaTime, bool bUpdatePawn = true) override;
-    UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category="Search") EPropertySearchRole SearchRole = EPropertySearchRole::None;
-    UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category="Search") TWeakObjectPtr<APropertyArea> SearchArea;
-    UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category="Search") int32 SearchSlot = INDEX_NONE;
-    UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category="Questioning") bool bQuestioning = false;
-    UFUNCTION(BlueprintCallable, Category="Questioning") bool TryQuestion(AActor* Player);
-    void AssignSearch(APropertyArea* Area, FVector Location);
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "Search")
+	EPropertySearchRole SearchRole = EPropertySearchRole::None;
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "Search")
+	TWeakObjectPtr<APropertyArea> SearchArea;
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "Search")
+	int32 SearchSlot = INDEX_NONE;
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "Questioning")
+	bool bQuestioning = false;
+	UFUNCTION(BlueprintCallable, Category = "Questioning")
+	bool TryQuestion(AActor* Player);
+	void AssignSearch(APropertyArea* Area, FVector Location);
 
 	void ResetAfterLoad(const FPropertySavedNPC& Snapshot);
-	FRotator GetHomeRotation() const { return HomeRotation; }
+	FRotator GetHomeRotation() const
+	{
+		return HomeRotation;
+	}
 	float GetRemainingRecovery() const;
 	void HandleDefeat();
 	void TargetDefeated();

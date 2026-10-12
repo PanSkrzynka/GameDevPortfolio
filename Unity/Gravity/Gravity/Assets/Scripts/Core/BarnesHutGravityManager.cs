@@ -15,6 +15,7 @@ public class BarnesHutGravityManager : MonoBehaviour
     [SerializeField, Min(1)] private int maxSubStepsPerFrame = 8;
 
     private float _accumulator;
+    private BarnesHutTree _tree;
 
     public float SimulationTimeScale => timeScale;
 
@@ -48,19 +49,9 @@ public class BarnesHutGravityManager : MonoBehaviour
     private void SimulateStep(float deltaTime)
     {
         Bounds simulationBounds = new(Vector3.zero, Vector3.one * Mathf.Max(1f, treeSize));
-        var tree = new BarnesHutTree(simulationBounds, theta, softening, gravitationalConstant);
-
-        foreach (var obj in GravityManager.Objects)
-        {
-            if (obj != null)
-                tree.Insert(obj);
-        }
-
-        foreach (var obj in GravityManager.Objects)
-        {
-            if (obj != null)
-                tree.ApplyForce(obj);
-        }
+        _tree ??= new BarnesHutTree(simulationBounds, theta, softening, gravitationalConstant);
+        _tree.Rebuild(GravityManager.Objects, simulationBounds, theta, softening, gravitationalConstant);
+        _tree.ApplyForces();
 
         foreach (var obj in GravityManager.Objects)
         {
